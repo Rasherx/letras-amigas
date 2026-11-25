@@ -30,6 +30,7 @@
   --guide: #cfd5ec;
   --redo: #ffc59e;
   --main-ink: #ffffff;
+  --gold: #b07400;
   --font: "Atkinson Hyperlegible", Verdana, "Segoe UI", Roboto, sans-serif;
   --radius: 18px;
 }
@@ -54,6 +55,7 @@
   --wood: #7a5b3c;
   --guide: #404a70;
   --redo: #8a4a22;
+  --gold: #ffcf5a;
 }
 *, *::before, *::after { box-sizing: border-box; }
 html, body { min-height: 100%; }
@@ -82,7 +84,11 @@ button:focus-visible, summary:focus-visible { outline: 3px solid var(--main); ou
   padding: 8px 16px; min-height: 46px; font-size: 1rem;
 }
 .round { width: 46px; padding: 0; font-size: 1.3rem; flex: none; }
-.round.off { opacity: .45; text-decoration: line-through; }
+.round { display: grid; place-items: center; }
+.ic { width: 1.3em; height: 1.3em; vertical-align: -0.24em; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.round .ic { width: 26px; height: 26px; }
+#trofeos, .gold .ic { color: var(--gold); }
+a.chip { display: grid; place-items: center; text-decoration: none; color: var(--ink); text-align: center; }
 
 #view { display: flex; flex-direction: column; gap: 16px; }
 h1 { font-size: 1.55rem; line-height: 1.2; margin: 0; text-wrap: balance; }
@@ -281,8 +287,8 @@ a.btn { display: grid; place-items: center; text-decoration: none; text-align: c
     <button class="chip" id="home" type="button" hidden>← Inicio</button>
     <span class="brand grow" id="brand"></span>
     <span class="grow" id="spacer" hidden></span>
-    <button class="chip round" id="trofeos" type="button" aria-label="Vitrina de trofeos">🏆</button>
-    <button class="chip round" id="ajustesBtn" type="button" aria-label="Ajustes">⚙️</button>
+    <button class="chip round" id="trofeos" type="button" aria-label="Vitrina de trofeos"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h10v6a5 5 0 0 1-10 0z"/><path d="M7 5.5H3.8v1.2A3.3 3.3 0 0 0 7 10M17 5.5h3.2v1.2A3.3 3.3 0 0 1 17 10M12 14.5V18M8 20.5h8M9.5 18h5"/></svg></button>
+    <button class="chip round" id="ajustesBtn" type="button" aria-label="Ajustes"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="6.4"/><circle cx="12" cy="12" r="2.6"/><path stroke-width="3" d="M18.8 12h2.4M2.8 12h2.4M12 18.8v2.4M12 2.8v2.4M16.8 16.8l1.7 1.7M5.5 5.5l1.7 1.7M16.8 7.2l1.7-1.7M5.5 18.5l1.7-1.7"/></svg></button>
   </div>
   <main id="view"></main>
 </div>
@@ -648,12 +654,21 @@ function home() {
   show(`
     <h1>Hola. ¿Qué hacemos hoy?</h1>
     <div class="tiles">${tile(ACTS[0], true)}${acts.map(a => tile(a)).join('')}</div>
-    <p class="hint">Letras de hoy: <b>${focusLabel()}</b>. Se cambian en ⚙️ Ajustes. Tus animales están en 🏆.</p>`, true);
+    <p class="hint">Letras de hoy: <b>${focusLabel()}</b>. Se cambian en Ajustes, arriba a la derecha.</p>
+    ${IN_APP ? '' : `<a class="chip" href="${APK_URL}" target="_blank" rel="noopener">Descargar la app para Android</a>`}`, true);
 }
 
 // ---------- Ajustes (la tuerca): sonido, pantalla, letras, apoyo ----------
-const VERSION = '1.5';
+const VERSION = '1.6';
+const ICON = {
+  gear: '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="6.4"/><circle cx="12" cy="12" r="2.6"/><path stroke-width="3" d="M18.8 12h2.4M2.8 12h2.4M12 18.8v2.4M12 2.8v2.4M16.8 16.8l1.7 1.7M5.5 5.5l1.7 1.7M16.8 7.2l1.7-1.7M5.5 18.5l1.7-1.7"/></svg>',
+  cup: '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h10v6a5 5 0 0 1-10 0z"/><path d="M7 5.5H3.8v1.2A3.3 3.3 0 0 0 7 10M17 5.5h3.2v1.2A3.3 3.3 0 0 1 17 10M12 14.5V18M8 20.5h8M9.5 18h5"/></svg>'
+};
 const APP_URL = 'https://rasherx.github.io/letras-amigas/';
+const APK_URL = 'https://github.com/Rasherx/letras-amigas/releases/latest/download/LetrasAmigas.apk';
+// Dentro de la app de Android no hace falta ofrecer la descarga.
+const IN_APP = (() => { try { return /; wv\)/.test(navigator.userAgent); } catch (e) { return false; } })();
+const SHARE_TEXT = 'Letras Amigas: app gratis para practicar las letras que se confunden.\nAbrir en el navegador: ' + APP_URL + '\nDescargar para Android: ' + APK_URL;
 // A donde llegan las ideas. Mientras esten vacios, la caja de ideas no se muestra.
 const IDEAS = { whatsapp: '', email: '' };
 const ideaHref = text => {
@@ -674,7 +689,7 @@ function ajustes() {
       <textarea id="idea" placeholder="Escribe aquí tu idea o lo que no funcionó"></textarea>
       <a class="btn" id="ideaLink" href="${ideaHref('')}" target="_blank" rel="noopener">Enviar mi idea</a>` : '';
   show(`
-    <h1>⚙️ Ajustes</h1>
+    <h1>${ICON.gear} Ajustes</h1>
     <section class="panel"><h2>Sonido</h2>
       ${sw('voice', 'Voz', 'Lee las palabras y explica cada paso')}
       ${sw('music', 'Música de fondo', 'Suave y bajita')}
@@ -686,10 +701,15 @@ function ajustes() {
       <p>Ahora: <b>${focusLabel()}</b>. Quien la acompaña elige las letras que ella confunde.</p>
       <button type="button" class="btn ghost" data-go="letras">Cambiar letras</button>
     </section>
+    ${IN_APP ? '' : `<section class="panel"><h2>Instalar en Android</h2>
+      <p>Descarga la app para usarla sin internet. Al instalarla, el celular pide permiso para instalar apps de fuera de la tienda.</p>
+      <a class="btn" href="${APK_URL}" target="_blank" rel="noopener">Descargar la app (APK)</a>
+    </section>`}
     <section class="panel"><h2>Apoya a Letras Amigas</h2>
       <p>Esta app es gratis. Nos ayudas a crecer si la compartes con otra familia o docente.</p>
       <button type="button" class="btn ghost" data-share>Compartir la app</button>
-      <p class="link">${APP_URL}</p>${ideas}
+      <p class="link">${APP_URL}</p>
+      <p class="link">Android: ${APK_URL}</p>${ideas}
       <p class="fb" id="fb" aria-live="polite"></p>
     </section>
     <details>
@@ -716,10 +736,10 @@ function toggleSetting(b) {
   if (id === 'dark') applyTheme();
 }
 function shareApp() {
-  const manual = () => soft('Copia el enlace de arriba y envíalo.');
+  const manual = () => soft('Copia los enlaces de abajo y envíalos.');
   try {
-    if (navigator.share) return navigator.share({ title: 'Letras Amigas', url: APP_URL }).catch(() => {});
-    navigator.clipboard.writeText(APP_URL).then(() => soft('Enlace copiado. Pégalo en un mensaje.'), manual);
+    if (navigator.share) return navigator.share({ title: 'Letras Amigas', text: SHARE_TEXT }).catch(() => {});
+    navigator.clipboard.writeText(SHARE_TEXT).then(() => soft('Mensaje copiado con los dos enlaces. Pégalo en un chat.'), manual);
   } catch (e) { manual(); }
 }
 
@@ -1131,7 +1151,7 @@ function vitrina() {
         ? `<button type="button" data-animal="${a[1]}" aria-label="${a[1]}">${a[0]}</button>` : '<span class="empty">?</span>').join('')}</div></section>`;
   }).join('');
   show(`
-    <h1>🏆 Mi vitrina</h1>
+    <h1 class="gold">${ICON.cup} Mi vitrina</h1>
     <p class="fb" id="fb" aria-live="polite">Tienes ${n} de ${ANIMALS.length} animales</p>
     <div class="tros">${tros}</div>
     ${shelves}
@@ -1155,7 +1175,7 @@ function finish() {
       <button type="button" class="btn ghost" data-go="home">Inicio</button>
       <button type="button" class="btn" data-go="${G.mode}">Otra vez →</button>
     </div>
-    <button type="button" class="btn ghost" data-go="vitrina">🏆 Ver mi vitrina</button>`);
+    <button type="button" class="btn ghost" data-go="vitrina">Ver mi vitrina</button>`);
   say(got ? (tro ? ['fin', got[1], 'trofeo'] : ['fin', got[1]]) : 'fin_todos');
 }
 
