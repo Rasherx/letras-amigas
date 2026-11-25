@@ -88,9 +88,11 @@ button:focus-visible, summary:focus-visible { outline: 3px solid var(--main); ou
 .ic { width: 1.3em; height: 1.3em; vertical-align: -0.24em; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .round .ic { width: 26px; height: 26px; }
 #trofeos, .gold .ic { color: var(--gold); }
-.banner { justify-content: space-between; }
+.banner { justify-content: space-between; background: var(--main); color: var(--main-ink); }
+.btn.share { background: var(--ok); border-color: var(--ok); }
+.btn.dl { background: var(--c0); border-color: var(--c0); }
 .banner b { font-size: 1.3rem; }
-.badge { background: var(--surface); border-radius: 999px; padding: 6px 16px; font-size: 1.4rem; font-weight: 700; white-space: nowrap; }
+.badge { background: var(--surface); border-radius: 999px; padding: 6px 16px; font-size: 1.4rem; font-weight: 700; white-space: nowrap; color: var(--ink); }
 a.chip { display: grid; place-items: center; text-decoration: none; color: var(--ink); text-align: center; }
 
 #view { display: flex; flex-direction: column; gap: 16px; }
@@ -694,7 +696,7 @@ function ajustes() {
       <a class="btn" id="ideaLink" href="${ideaHref('')}" target="_blank" rel="noopener">Enviar mi idea</a>` : '';
   show(`
     <h1>${ICON.gear} Ajustes</h1>
-    <button type="button" class="tile wide lilac banner" data-go="letras"><b>Cambiar letras</b><span class="badge">${focusLabel()}</span></button>
+    <button type="button" class="tile wide banner" data-go="letras"><b>Cambiar letras</b><span class="badge">${focusLabel()}</span></button>
     <section class="panel"><h2>Sonido</h2>
       ${sw('voice', 'Voz', 'Lee las palabras y explica cada paso')}
       ${sw('music', 'Música de fondo', 'Suave y bajita')}
@@ -703,11 +705,11 @@ function ajustes() {
       ${sw('dark', 'Modo oscuro', 'Fondo oscuro para descansar la vista')}
     </section>
     ${IN_APP ? '' : `<section class="panel"><h2>Instalar en Android</h2>
-      <a class="btn" href="${APK_URL}" target="_blank" rel="noopener">Descargar la app (APK)</a>
+      <a class="btn dl" href="${APK_URL}" target="_blank" rel="noopener">Descargar la app (APK)</a>
     </section>`}
     <section class="panel"><h2>Apoya a Letras Amigas</h2>
       <p>Esta app es gratis. Nos ayudas a crecer si la compartes con otra familia o docente.</p>
-      <button type="button" class="btn ghost" data-share>Compartir la app</button>
+      <button type="button" class="btn share" data-share>Compartir la app</button>
 ${ideas}
       <p class="fb" id="fb" aria-live="polite"></p>
     </section>
