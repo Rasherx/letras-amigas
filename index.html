@@ -664,7 +664,7 @@ function home() {
 }
 
 // ---------- Ajustes (la tuerca): sonido, pantalla, letras, apoyo ----------
-const VERSION = '1.8';
+const VERSION = '1.9';
 const ICON = {
   gear: '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="6.4"/><circle cx="12" cy="12" r="2.6"/><path stroke-width="3" d="M18.8 12h2.4M2.8 12h2.4M12 18.8v2.4M12 2.8v2.4M16.8 16.8l1.7 1.7M5.5 5.5l1.7 1.7M16.8 7.2l1.7-1.7M5.5 18.5l1.7-1.7"/></svg>',
   cup: '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h10v6a5 5 0 0 1-10 0z"/><path d="M7 5.5H3.8v1.2A3.3 3.3 0 0 0 7 10M17 5.5h3.2v1.2A3.3 3.3 0 0 1 17 10M12 14.5V18M8 20.5h8M9.5 18h5"/></svg>'
@@ -1117,7 +1117,7 @@ function tapMatch(btn) {
     G.sel = { type, w, btn };
     btn.classList.add('sel');
     soft('');
-    if (type === 'p') say(w);
+    say(w);   // dice la palabra tanto al tocar el dibujo como al tocar la palabra escrita
     return;
   }
   const a = G.sel.btn;
