@@ -89,8 +89,7 @@ button:focus-visible, summary:focus-visible { outline: 3px solid var(--main); ou
 .round .ic { width: 26px; height: 26px; }
 #trofeos, .gold .ic { color: var(--gold); }
 .banner { justify-content: space-between; background: var(--main); color: var(--main-ink); }
-.btn.share { background: var(--ok); border-color: var(--ok); }
-.btn.dl { background: var(--c0); border-color: var(--c0); }
+.btn.share { background: var(--c0); border-color: var(--c0); }
 .banner b { font-size: 1.3rem; }
 .badge { background: var(--surface); border-radius: 999px; padding: 6px 16px; font-size: 1.4rem; font-weight: 700; white-space: nowrap; color: var(--ink); }
 a.chip { display: grid; place-items: center; text-decoration: none; color: var(--ink); text-align: center; }
@@ -665,7 +664,7 @@ function home() {
 }
 
 // ---------- Ajustes (la tuerca): sonido, pantalla, letras, apoyo ----------
-const VERSION = '1.7';
+const VERSION = '1.8';
 const ICON = {
   gear: '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="6.4"/><circle cx="12" cy="12" r="2.6"/><path stroke-width="3" d="M18.8 12h2.4M2.8 12h2.4M12 18.8v2.4M12 2.8v2.4M16.8 16.8l1.7 1.7M5.5 5.5l1.7 1.7M16.8 7.2l1.7-1.7M5.5 18.5l1.7-1.7"/></svg>',
   cup: '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h10v6a5 5 0 0 1-10 0z"/><path d="M7 5.5H3.8v1.2A3.3 3.3 0 0 0 7 10M17 5.5h3.2v1.2A3.3 3.3 0 0 1 17 10M12 14.5V18M8 20.5h8M9.5 18h5"/></svg>'
@@ -674,7 +673,6 @@ const APP_URL = 'https://rasherx.github.io/letras-amigas/';
 const APK_URL = 'https://github.com/Rasherx/letras-amigas/releases/latest/download/LetrasAmigas.apk';
 // Dentro de la app de Android no hace falta ofrecer la descarga.
 const IN_APP = (() => { try { return /; wv\)/.test(navigator.userAgent); } catch (e) { return false; } })();
-const SHARE_TEXT = 'Letras Amigas: app gratis para practicar las letras que se confunden.\nAbrir en el navegador: ' + APP_URL + '\nDescargar para Android: ' + APK_URL;
 // A donde llegan las ideas. Mientras esten vacios, la caja de ideas no se muestra.
 const IDEAS = { whatsapp: '', email: '' };
 const ideaHref = text => {
@@ -705,7 +703,7 @@ function ajustes() {
       ${sw('dark', 'Modo oscuro', 'Fondo oscuro para descansar la vista')}
     </section>
     ${IN_APP ? '' : `<section class="panel"><h2>Instalar en Android</h2>
-      <a class="btn dl" href="${APK_URL}" target="_blank" rel="noopener">Descargar la app (APK)</a>
+      <a class="btn ghost" href="${APK_URL}" target="_blank" rel="noopener">Descargar la app (APK)</a>
     </section>`}
     <section class="panel"><h2>Apoya a Letras Amigas</h2>
       <p>Esta app es gratis. Nos ayudas a crecer si la compartes con otra familia o docente.</p>
@@ -739,8 +737,7 @@ function toggleSetting(b) {
 function shareApp() {
   const manual = () => soft('Copia este enlace: ' + APP_URL);
   try {
-    if (navigator.share) return navigator.share({ title: 'Letras Amigas', text: SHARE_TEXT }).catch(() => {});
-    navigator.clipboard.writeText(SHARE_TEXT).then(() => soft('Mensaje copiado con los dos enlaces. Pégalo en un chat.'), manual);
+    navigator.clipboard.writeText(APP_URL).then(() => soft('Enlace copiado. Pégalo en un mensaje.'), manual);
   } catch (e) { manual(); }
 }
 
